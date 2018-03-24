@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>D3 Practice</title>
+    <script src = 'http://d3js.org/d3.v3.min.js'></script>
+</head>
+<body>
+    <script>
+        var dataArray = [20, 40, 50, 60];
+
+        var width = 500;
+
+        var height = 500;
+
+        var widthScale = d3.scale.linear() //d3 method for setting scales
+                    .domain([0, 60]) //range of the data
+                    .range([0, width]); //range of the container
+
+        var color = d3.scale.linear()
+                .domain([0, 60])
+                .range(['red', 'blue']); //give a range of colors to the data
+
+        var axis = d3.svg.axis()
+            .ticks(5)
+            .scale(widthScale);
+
+        var canvas = d3.select("body") //give select method a css selector as input. Use selectAll when more than one element is needed
+                .append('svg') //creates new DOM element specified and appends it to the end
+                .attr("width", width)
+                .attr('height', height)
+                .attr("transform", "translate(0, 50)"); // moves the elements 50 px down and to the right. (x, y)
+
+
+        //create bars
+        var bars = canvas.selectAll('rect') //selects all rectangles. creates a placeholder
+                .data(dataArray)
+                .enter() //contains placeholder for every element in the data
+                    .append('rect') //for each placeholder, append a rectangle
+                    .attr("width", function(d) {
+                        return widthScale(d); //goes through all data elements and for each data elements it returns the corresponding width
+                    })
+                    .attr("height", 50)
+                    .attr("y", function(d, i) { //d contains data, i contains index. sets vertical coordinates
+                        return i * 100
+                    })
+                    .attr("fill", function(d) {
+                        return color(d)
+                    });
+
+        canvas.append('g') //just append a new object
+            .attr('transform', 'translate(0, 400)')
+            .call(axis)
+
+    </script>
+
+</body>
+</html>
